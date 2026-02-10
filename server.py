@@ -12,12 +12,11 @@ import logging
 import sys
 import json
 
-# Configure logging
+# Configure logging (stderr only — no file logging for cloud deployment)
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.FileHandler('story_mcp_server.log'),
         logging.StreamHandler(sys.stderr)
     ]
 )
