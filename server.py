@@ -54,7 +54,17 @@ async def _api_post(client: httpx.AsyncClient, endpoint: str, data: Dict[str, An
         )
         r.raise_for_status()
         logger.info(f"API request successful - Status: {r.status_code}")
-        return r.json()
+
+        # Try to parse as JSON, fallback to raw text
+        try:
+            return r.json()
+        except json.JSONDecodeError:
+            raw_text = r.text
+            logger.warning(f"Response is not valid JSON. Raw response (first 500 chars): {raw_text[:500]}")
+            return {
+                "success": True,
+                "raw_response": raw_text
+            }
     except httpx.TimeoutException as e:
         logger.error(f"Timeout error: {e}")
         return {
